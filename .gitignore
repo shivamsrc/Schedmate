@@ -1,6 +1,9 @@
 # Frontend / client
 client/node_modules
 
+# Backend / server
+server/node_modules
+
 # Logs
 client/logs
 client/*.log
