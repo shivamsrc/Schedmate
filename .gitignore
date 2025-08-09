@@ -3,6 +3,7 @@ client/node_modules
 
 # Backend / server
 server/node_modules
+.env
 
 # Logs
 client/logs
