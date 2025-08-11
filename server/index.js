@@ -8,7 +8,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/user/auth", AuthRouter);
+app.use("/schedmate/auth", AuthRouter);
 
 // DB connect
 async function DbConnect(){
