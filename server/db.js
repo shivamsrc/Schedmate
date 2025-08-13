@@ -26,6 +26,7 @@ const Availability = new Schema({
     availabilities: [
         {
             date: String,
+            available: {type: Boolean, default: true},
             startTime: String, 
             endTime: String
         }
