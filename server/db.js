@@ -23,9 +23,13 @@ const Meeting = new Schema({
 
 const Availability = new Schema({
     userId: {type: ObjectId, ref: "users", required: true},
-    date: String,
-    startTime: String, 
-    endTime: String
+    availabilities: [
+        {
+            date: String,
+            startTime: String, 
+            endTime: String
+        }
+    ]
 });
 
 const Integration = new Schema({
