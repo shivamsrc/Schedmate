@@ -49,10 +49,11 @@ AuthRouter.get("/verify", passport.authenticate('google', {failureRedirect: "/"}
         });
 
         if(user == undefined){
-            res.redirect("/setup")                                  // if no profile has been setup already by the user
+            // CHANGE IT TO FE PAGE ROUTE THAT WILL SEND POST REQUEST ON THIS ROUTE
+            res.redirect("http://localhost:3000/schedmate/profile/setup")                   // if no profile has been setup already by the user
         }
         else{
-            res.redirect("/main")                                   // if there exists a profile of the user
+            res.redirect("http://localhost:3000/schedmate/user/main")                // if there exists a profile of the user
         }
     }
 );

@@ -7,7 +7,7 @@ const User = new Schema({
     emailUserId: {type: String, unique: true, required: true},
     name: String,
     timezone: String,
-    avtarUrl: String
+    avatarUrl: String
 });
 
 const Meeting = new Schema({
@@ -25,7 +25,7 @@ const Availability = new Schema({
     userId: {type: ObjectId, ref: "users", required: true},
     availabilities: [
         {
-            date: String,
+            day: String,
             available: {type: Boolean, default: true},
             startTime: String, 
             endTime: String
