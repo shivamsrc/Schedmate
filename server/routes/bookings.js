@@ -25,6 +25,32 @@ BookingsRouter.get("/", async function(req, res){
     })
 });
 
+
+// cancelling the meet
+BookingsRouter.get("/meeting/:id/cancel", async function(req, res){
+    const { id } = req.params;
+    try{
+        const meeting = await MeetingModel.findByIdAndUpdate(
+            id,
+            {status: "cancelled"},
+            {new: true}                                                       // will return the updated version
+        );
+
+        if(meeting){
+            res.json({
+                message: "meeting cancelled", 
+                meeting
+            })
+        }
+        else{
+            res.status(404).json({error: "meeting not found"})
+        }
+    }
+    catch(err){
+        res.status(500).json({error: "server error", err})
+    }
+});
+
 module.exports = {
     BookingsRouter
 }
