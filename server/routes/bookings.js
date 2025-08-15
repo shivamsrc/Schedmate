@@ -27,7 +27,7 @@ BookingsRouter.get("/", async function(req, res){
 
 
 // cancelling the meet
-BookingsRouter.get("/meeting/:id/cancel", async function(req, res){
+BookingsRouter.patch("/meeting/:id/cancel", async function(req, res){
     const { id } = req.params;
     try{
         const meeting = await MeetingModel.findByIdAndUpdate(
