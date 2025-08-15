@@ -6,6 +6,7 @@ const session = require("express-session");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20");
 const { SetupRouter } = require("./routes/profileSetup");
+const { BookingsRouter } = require("./routes/bookings");
 
 const app = express();
 app.use(express.json());
@@ -35,6 +36,8 @@ function isAuthenticated(req, res, next){
 app.use(isAuthenticated);
 
 app.use("/schedmate/profile/setup", SetupRouter);
+
+app.use("/schedmate/user/main", BookingsRouter);
 
 // DB connect
 async function DbConnect(){
