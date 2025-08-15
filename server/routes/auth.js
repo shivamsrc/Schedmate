@@ -45,7 +45,7 @@ AuthRouter.get("/verify", passport.authenticate('google', {failureRedirect: "/"}
 
         const user = await UserModel.findOne({
             email,
-            id
+            emailUserId: id
         });
 
         if(user == undefined){

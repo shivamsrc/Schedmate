@@ -17,7 +17,7 @@ const Meeting = new Schema({
     requestedTo: {type: ObjectId, ref: "users", required: true},
     startTime: Date,
     endTime: Date,
-    status: {type: String, enum: ["accepted", "declined", "cancelled", "pending"], default: "pending"},
+    status: {type: String, enum: ["scheduled", "rescheduled", "cancelled"]},
     googlemeetId: String
 });
 
@@ -26,7 +26,7 @@ const Availability = new Schema({
     availabilities: [
         {
             day: String,
-            available: {type: Boolean, default: true},
+            available: {type: Boolean, default: false},
             startTime: String, 
             endTime: String
         }
