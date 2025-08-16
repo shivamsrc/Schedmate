@@ -18,7 +18,8 @@ const Meeting = new Schema({
     startTime: Date,
     endTime: Date,
     status: {type: String, enum: ["scheduled", "rescheduled", "cancelled"]},
-    googlemeetId: String
+    googlemeetId: String,
+    googleEventId: String
 });
 
 const Availability = new Schema({

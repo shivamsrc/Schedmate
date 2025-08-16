@@ -4,7 +4,7 @@ const SetupRouter = Router();
 
 SetupRouter.post("/", async function(req, res){
     const {name, timeZone, profilePic, availabilities} = req.body;
-    const email = req.user.profile.email;
+    const email = req.user.profile.emails[0].value;
     const id = req.user.profile.id;
     const accessToken = req.user.accessToken;
     const refreshToken = req.user.refreshToken;

@@ -32,6 +32,7 @@ AuthRouter.get("/signin", passport.authenticate('google', {
         'email',
         'https://www.googleapis.com/auth/calendar'
     ],
+    accessType: "offline",
     prompt: 'consent login'
 }));
 
@@ -40,7 +41,7 @@ AuthRouter.get("/signin", passport.authenticate('google', {
 AuthRouter.get("/verify", passport.authenticate('google', {failureRedirect: "/"}),
 
     async function(req, res){                                                                // here this 'req' have access to the profile and email and for calendar you have to call through the api.
-        const email = req.user.profile.email;
+        const email = req.user.profile.emails[0].value;
         const id = req.user.profile.id;
 
         const user = await UserModel.findOne({
@@ -48,7 +49,7 @@ AuthRouter.get("/verify", passport.authenticate('google', {failureRedirect: "/"}
             emailUserId: id
         });
 
-        if(user == undefined){
+        if(!user){
             // CHANGE IT TO FE PAGE ROUTE THAT WILL SEND POST REQUEST ON THIS ROUTE
             res.redirect("http://localhost:3000/schedmate/profile/setup")                   // if no profile has been setup already by the user
         }
