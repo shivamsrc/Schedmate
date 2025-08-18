@@ -1,9 +1,32 @@
 const { Router } = require("express");
 const { UserModel, AvailabilityModel, IntegrationModel } = require("../db");
 const SetupRouter = Router();
+const {v2: cloudinary} = require("cloudinary");
+const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+require("dotenv").config();
 
-SetupRouter.post("/", async function(req, res){
-    const {name, timeZone, profilePic, availabilities} = req.body;
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET
+});
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: "SchedmateProfilePics",
+        allowed_formats: ["jpeg", "png"]
+    }
+});
+
+const upload = multer({storage: storage});
+// Start //
+
+SetupRouter.post("/", upload.single("profileImage"), async function(req, res){                // this "profileImage" should be the name of input tag in form and the action of that form should redirct to this route 
+    
+    const {name, timeZone, availabilities} = req.body;
+    const profilePic = req.file?.path || req.file?.secure_url || req.user.profile.photos[0].value;
     const email = req.user.profile.emails[0].value;
     const id = req.user.profile.id;
     const accessToken = req.user.accessToken;

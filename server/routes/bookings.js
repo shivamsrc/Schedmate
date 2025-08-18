@@ -23,6 +23,7 @@ BookingsRouter.get("/", async function(req, res){
     .sort({startTime: 1});                                                        // '1' for ascending order and '-1' for descending order
 
     res.json({
+        user,
         meetings
     })
 });
