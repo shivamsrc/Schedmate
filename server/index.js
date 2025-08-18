@@ -8,6 +8,8 @@ const GoogleStrategy = require("passport-google-oauth20");
 const { SetupRouter } = require("./routes/profileSetup");
 const { BookingsRouter } = require("./routes/bookings");
 const { AvailabilityRouter } = require("./routes/availability");
+const { publicRouter } = require("./routes/publicPage");
+
 
 const app = express();
 app.use(express.json());
@@ -41,6 +43,8 @@ app.use("/schedmate/profile/setup", SetupRouter);
 app.use("/schedmate/user/main", BookingsRouter);
 
 app.use("/schedmate/user/availability", AvailabilityRouter);
+
+app.use("/schedmate/user", publicRouter);
 
 // DB connect
 async function DbConnect(){

@@ -24,7 +24,7 @@ AvailabilityRouter.get("/", async function(req, res){
     }
 });
 
-
+// update endpoint
 AvailabilityRouter.put("/update", async function(req, res){
     try{
         const email = req.user.profile.emails[0].value;
