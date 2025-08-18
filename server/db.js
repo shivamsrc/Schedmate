@@ -28,8 +28,8 @@ const Availability = new Schema({
         {
             day: String,
             available: {type: Boolean, default: false},
-            startTime: String, 
-            endTime: String
+            startTime: Date, 
+            endTime: Date
         }
     ]
 });
