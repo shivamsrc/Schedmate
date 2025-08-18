@@ -59,6 +59,23 @@ AuthRouter.get("/verify", passport.authenticate('google', {failureRedirect: "/"}
     }
 );
 
+AuthRouter.get("/logout", function(req, res){
+    req.logOut((err) => {
+        if(err){
+            return next(err)
+        }
+
+        req.session.destroy((err) => {                                                     // destroy the session on server
+            if(err){
+                return res.status(500).send("Logout Failed")
+            }
+
+            res.clearCookie("connect.sid", {path: "/"});                                    // not necessary but clears the session id stored on browser for entire path
+            res.redirect("/");
+        })
+    });
+});
+
 module.exports = {
     AuthRouter: AuthRouter
 }
