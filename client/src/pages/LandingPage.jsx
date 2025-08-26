@@ -3,18 +3,24 @@ import {Link as RouterLink} from "react-router-dom";
 import {useState, useEffect} from "react";
 import {motion} from "framer-motion";
 import Spline from "@splinetool/react-spline";
+import {FcGoogle} from "react-icons/fc";
+import { authAtom } from "../atoms/authAtom";
+import {RecoilRoot, useRecoilValue, useSetRecoilState} from "recoil";
 
 export default function LandingPage(){
 
     return (
-    <div className="relative min-h-screen text-white overflow-hidden">
-        <Gradient/>
-        <NavBar/>
-        <div className="flex flex-row justify-between">
-            <LeftSec/>
-            <RightSec/>
+    <RecoilRoot>
+        <div className="relative min-h-screen text-white overflow-hidden">
+            <Gradient/>
+            <NavBar/>
+            <div className="flex flex-row justify-between">
+                <LeftSec/>
+                <RightSec/>
+            </div>
+            <GoogleAuthCard/>
         </div>
-    </div>
+    </RecoilRoot>
   );
 }
 
@@ -39,6 +45,11 @@ function Gradient(){
 }
 
 function NavBar(){
+    const setShowAuthPage = useSetRecoilState(authAtom);
+
+    function authPage(){
+        setShowAuthPage((val) => !val)
+    }
 
     return <div className="relative inset-0 flex z-1 justify-between pt-10 pl-45 pr-45">
         <div className="text-xl font-bold">
@@ -50,13 +61,18 @@ function NavBar(){
             <ScrollLink to="" smooth={true} duration={500} className="cursor-pointer">Feedback</ScrollLink>
             <ScrollLink to="" smooth={true} duration={500} className="cursor-pointer">Contact us</ScrollLink>
         </div>
-        <div className="px-6 py-2 rounded-4xl bg-gradient-to-r from-pink-500 to-orange-400 text-white cursor-pointer hover:brightness-110 transition font-semibold">
+        <div onClick={authPage} className="px-6 py-2 rounded-4xl bg-gradient-to-r from-pink-500 to-orange-400 text-white cursor-pointer hover:brightness-110 transition font-semibold">
             Sign in
         </div>
     </div>
 }
 
 function LeftSec(){
+    const setShowAuthPage = useSetRecoilState(authAtom);
+
+    function authPage(){
+        setShowAuthPage((val) => !val)
+    }
 
     return (
         <div className="relative flex flex-col z-2 w-130 h-100 ml-45 mt-30">
@@ -72,7 +88,7 @@ function LeftSec(){
                 Stop wasting time juggling calendars. With Schedmate, share availability instantly, let people book in seconds, and keep every meeting organized and stress-free.
             </div>
 
-            <div className="px-6 py-2 rounded-4xl bg-gradient-to-r from-pink-500 to-orange-400 text-white cursor-pointer hover:brightness-110 transition font-semibold w-33 text-center">
+            <div onClick={authPage} className="px-6 py-2 rounded-4xl bg-gradient-to-r from-pink-500 to-orange-400 text-white cursor-pointer hover:brightness-110 transition font-semibold w-33 text-center">
                 Get started
             </div>
         </div>
@@ -140,4 +156,34 @@ function RightSec(){
             <Spline   scene="https://prod.spline.design/SdrzbS97Voe8k4RH/scene.splinecode"/>
         </div>
     );
+}
+
+function GoogleAuthCard() {
+    const showAuthPage = useRecoilValue(authAtom);
+    const setShowAuthPage = useSetRecoilState(authAtom);
+
+    function authPage(){
+        setShowAuthPage(false)
+    }
+
+    const handleGoogleAuth = () => {
+    window.location.href = "http://localhost:3000/schedmate/auth/signin";
+    };
+
+    return (
+    <div onClick={authPage} className={`fixed inset-0 ${showAuthPage ? "opacity-100" : "opacity-0 pointer-events-none"} transition-all duration-300 ease-in-out flex items-center justify-center backdrop-blur-sm bg-black/40 z-50`}>
+        <div onClick={(e)=> e.stopPropagation()} className="w-[350px] bg-white/90 rounded-2xl shadow-3xl p-6 flex flex-col items-center gap-6">
+            <h1 className="text-2xl font-semibold text-gray-800">Welcome</h1>
+            <p className="text-gray-700">Sign in to continue</p>
+
+            <button
+            onClick={handleGoogleAuth}
+            className="w-full flex items-center justify-center gap-3 bg-white text-gray-800 hover:bg-gray-100 rounded-xl border shadow-md py-3"
+            >
+            <FcGoogle size={22} />
+            <span>Continue with Google</span>
+            </button>
+        </div>
+    </div>
+  );
 }
