@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 require("dotenv").config();
 const { AuthRouter } = require("./routes/auth");
 const session = require("express-session");
@@ -12,6 +13,9 @@ const { publicRouter } = require("./routes/publicPage");
 
 
 const app = express();
+app.use(cors({
+    origin: "http://localhost:5173/"
+}));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
