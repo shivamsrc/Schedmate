@@ -25,7 +25,8 @@ const upload = multer({storage: storage});
 
 SetupRouter.post("/", upload.single("profileImage"), async function(req, res){                // this "profileImage" should be the name of input tag in form and the action of that form should redirct to this route 
     
-    const {name, timeZone, availabilities} = req.body;
+    const {name, timeZone, availabilitiesData} = req.body;
+    const availabilities = JSON.parse(availabilitiesData);
     const profilePic = req.file?.path || req.file?.secure_url || req.user.profile.photos[0].value;
     const email = req.user.profile.emails[0].value;
     const id = req.user.profile.id;
@@ -53,10 +54,11 @@ SetupRouter.post("/", upload.single("profileImage"), async function(req, res){  
             refreshToken: refreshToken
         });
 
-        res.redirect("http://localhost:3000/schedmate/user/main");
+        // res.redirect("http://localhost:3000/schedmate/user/main");
+        res.status(201).json({message: "completed"});
     }
     catch(err){
-        res.json(`profile setup failed: ${err}`)
+        res.status(500).json(`profile setup failed: ${err}`)
     }
 });
 
