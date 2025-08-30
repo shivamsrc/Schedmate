@@ -54,7 +54,7 @@ AuthRouter.get("/verify", passport.authenticate('google', {failureRedirect: "/"}
             res.redirect("http://localhost:5173/schedmate/profile/setup")                   // if no profile has been setup already by the user
         }
         else{
-            res.redirect("http://localhost:5173/schedmate/user/main")                // if there exists a profile of the user
+            res.redirect("http://localhost:5173/user/bookings")                // if there exists a profile of the user
         }
     }
 );
