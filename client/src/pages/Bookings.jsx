@@ -2,6 +2,8 @@ import { useMediaQuery } from "../atoms/menuAtom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Spline from "@splinetool/react-spline";
+import { SpinnerAtom } from "../atoms/spinner";
+import { RecoilRoot, useRecoilValue, useSetRecoilState } from "recoil";
 
 export default function Bookings(){
 
@@ -14,12 +16,19 @@ function Content(){
     const isDesktop = useMediaQuery("(min-width: 780px)");
     const [user, setUser] = useState({});
     const [meetings, setMeetings] = useState([]);
+    const spinner = useRecoilValue(SpinnerAtom);
+    const setSpinner = useSetRecoilState(SpinnerAtom);
 
     useEffect(() => {
         async function request(){
+            setSpinner(true);
             const response = await axios.get("http://localhost:3000/schedmate/user/main/", {withCredentials: true});
             setUser(response.data.user);
             setMeetings(response.data.meetings.filter(m => m.status === "scheduled"));
+
+            if(response.status === 200){
+                setSpinner(false)
+            }
         }
         request();
     }, []);
@@ -27,7 +36,11 @@ function Content(){
     return (
     <div className={`${isDesktop ? "ml-7" : "ml-0"} flex flex-1`}>
         <div className={`flex-1 ${isDesktop? "" : ""}`}>
-            {meetings.length > 0 ? (meetings.map((meeting, i) => (
+            {spinner ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm rounded-xl">
+                <div className="w-12 h-12 border-4 border-transparent border-t-indigo-400 border-r-indigo-300 rounded-full animate-spin"></div>
+            </div>) : 
+            meetings.length > 0 ? (meetings.map((meeting, i) => (
             <div key={i} className="flex justify-between rounded-xl border border-white/10 bg-zinc-800/60 p-5 mb-4">
             {/* Left */}
                 <div className="flex flex-col space-y-2 text-sm text-gray-200">
@@ -70,10 +83,10 @@ function Content(){
                     <div className="absolute bottom-5 left-0 w-full h-12 bg-black"></div>
                 </div>
 
-                <div className="flex items-center mt-3 text-lg font-semibold text-gray-300">
+                {!spinner && meetings.length === 0 && <div className="flex items-center mt-3 text-lg font-semibold text-gray-300">
                     <i className="fa-regular fa-calendar-xmark mr-3 text-red-400"></i>
                     <span>No upcoming meetings</span>
-                </div>
+                </div>}
             </div>)}
         </div>
     </div>)

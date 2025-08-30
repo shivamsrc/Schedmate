@@ -7,7 +7,7 @@ export const MenuAtom = new atom({
 });
 
 export const useMediaQuery = (query) => {
-    const [matches, setMatches] = useState(false);
+    const [matches, setMatches] = useState(true);
 
     useEffect(() => {
         const media = window.matchMedia(query);    // returns an object that have {matches: boolean}

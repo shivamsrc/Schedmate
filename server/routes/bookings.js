@@ -22,7 +22,7 @@ BookingsRouter.get("/", async function(req, res){
     .populate('requestedTo', 'name email')
     .sort({startTime: 1});                                                        // '1' for ascending order and '-1' for descending order
 
-    res.json({
+    res.status(200).json({
         user,
         meetings
     })
