@@ -77,8 +77,10 @@ function Content(){
                     <div className={`invisible opacity-0 flex group-hover:visible group-hover:opacity-100 absolute top-5 right-5 items-center gap-2 px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-gray-300 hover:bg-red-500 hover:text-white shadow-md cursor-pointer transition duration-400 delay-100`}>
                         <span 
                             onClick={async ()=>{
+                                setSpinner(true);
                                 await axios.patch(`http://localhost:3000/schedmate/user/main/meeting/${meeting._id}/cancel`, {}, {withCredentials: true})
                                 setMeetings(prev => prev.filter(m => m._id !== meeting._id));
+                                setSpinner(false);
                             }}>
                             cancel
                         </span>

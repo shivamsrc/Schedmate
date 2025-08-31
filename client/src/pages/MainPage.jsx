@@ -5,6 +5,7 @@ import { MenuAtom, useMediaQuery } from "../atoms/menuAtom";
 import { RecoilRoot, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function MainPage(){
     const isDesktop = useMediaQuery("(min-width: 780px)");
@@ -58,9 +59,20 @@ function Menu(props){
     const location = useLocation();
     const currentPath = location.pathname.split("/");
     const lastSegment = currentPath[currentPath.length -1];
+    const navigate = useNavigate();
 
     const HandleMenuSwitch = () => {
         setMenu((val) => !val)
+    }
+
+    const navigateBooking = () => {
+        navigate("/user/bookings")
+    }
+    const navigateAvailability = () => {
+        navigate("/user/availability")
+    }
+    const navigatePublicPage = () => {
+        navigate("/user/publicpage")          // give params
     }
 
     return <div className={`sticky top-20 left-5 bg-zinc-800 ${horizontal ? "p-2 mt-2 -mb-4" : "p-4"} ${menuOn ? "px-4 rounded-2xl" : "px-1 rounded-full"} shadow-lg ${isDesktop ? "p-0 m-0" : (horizontal ? "p-2 mt-2 -mb-4" : "p-4", menuOn ? "px-4 rounded-2xl" : "px-1 rounded-full")} max-h-[86vh]`}>
@@ -68,15 +80,15 @@ function Menu(props){
                 <div className={`flex items-center justify-end ${horizontal ? "py-0 px-1" : "py-2 px-3"} rounded-lg`}>
                     <div onClick={isDesktop ? HandleMenuSwitch : undefined} className="hover:bg-zinc-700 p-2 rounded-full"><i class="fa-solid fa-bars"></i></div>
                 </div>
-                <div className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg hover:bg-zinc-700 ${lastSegment == "bookings" ? "bg-zinc-700" : ""}`}>
+                <div onClick={navigateBooking} className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg hover:bg-zinc-700 ${lastSegment == "bookings" ? "bg-zinc-700" : ""}`}>
                     {menuOn ? <div className="mr-3">Bookings</div> : null}
                     <div><i class="fa-solid fa-calendar-alt"></i></div>
                 </div>
-                <div className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg hover:bg-zinc-700 ${lastSegment == "availability" ? "bg-zinc-700" : ""}`}>
+                <div onClick={navigateAvailability} className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg hover:bg-zinc-700 ${lastSegment == "availability" ? "bg-zinc-700" : ""}`}>
                     {menuOn ? <div className="mr-3">Availability</div> : null}
                     <div><i class="fa-solid fa-clock"></i></div>
                 </div>
-                <div className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg hover:bg-zinc-700 ${lastSegment == "public" ? "bg-zinc-700" : ""}`}>
+                <div onClick={navigatePublicPage} className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg hover:bg-zinc-700 ${lastSegment == "public" ? "bg-zinc-700" : ""}`}>
                     {menuOn ? <div className="mr-3">Public Page</div> : null}
                     <div><i class="fa-solid fa-user"></i></div>
                 </div>

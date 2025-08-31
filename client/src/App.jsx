@@ -3,6 +3,7 @@ import LandingPage from "./pages/LandingPage";
 import ProfileSetupPage from "./pages/profileSetup";
 import MainPage from "./pages/MainPage";
 import Bookings from "./pages/Bookings";
+import Availability from "./pages/Availability";
 
 export default function App(){
 
@@ -11,8 +12,9 @@ export default function App(){
             <Routes>
                 <Route path="/" element={<LandingPage/>}/>
                 <Route path="/schedmate/profile/setup" element={<ProfileSetupPage/>}/>
-                <Route path="/user/bookings" element={<MainPage/>}>
-                    <Route index element={<Bookings/>}/>
+                <Route path="/user" element={<MainPage/>}>
+                    <Route path="bookings" element={<Bookings/>}/>
+                    <Route path="availability" element={<Availability/>}/>
                 </Route>
             </Routes>
         </BrowserRouter>
