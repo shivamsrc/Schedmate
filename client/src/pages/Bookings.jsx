@@ -46,8 +46,8 @@ function Content(){
                 <div className="flex flex-col space-y-2 text-sm text-gray-200">
             
                     <div className="flex items-center gap-2 text-base font-semibold text-white">
-                    <i className="fa-solid fa-thumbtack text-blue-400"></i>
-                    {meeting.title}
+                        <i className="fa-solid fa-thumbtack text-blue-400"></i>
+                        {meeting.title}
                     </div>
 
                     <div className="flex items-center gap-2 text-gray-400 text-sm">
@@ -72,8 +72,17 @@ function Content(){
                 </div>
 
             {/* Right (Menu) */}
-                <div className="flex flex-top text-gray-400 hover:text-white cursor-pointer">
-                    <i className="fa-solid fa-ellipsis"></i>
+                <div className="flex text-gray-400 cursor-pointer relative group">
+                    <i className="fa-solid fa-ellipsis hover:text-white"></i>
+                    <div className={`invisible opacity-0 flex group-hover:visible group-hover:opacity-100 absolute top-5 right-5 items-center gap-2 px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-gray-300 hover:bg-red-500 hover:text-white shadow-md cursor-pointer transition duration-400 delay-100`}>
+                        <span 
+                            onClick={async ()=>{
+                                await axios.patch(`http://localhost:3000/schedmate/user/main/meeting/${meeting._id}/cancel`, {}, {withCredentials: true})
+                                setMeetings(prev => prev.filter(m => m._id !== meeting._id));
+                            }}>
+                            cancel
+                        </span>
+                    </div>
                 </div>
             </div>))) : (
       
