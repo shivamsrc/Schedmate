@@ -10,12 +10,12 @@ AvailabilityRouter.get("/", async function(req, res){
         });
         const userId = user._id;
     
-        const availabilty = await AvailabilityModel.findOne({
+        const availability = await AvailabilityModel.findOne({
             userId
         });
 
         res.status(200).json({
-            availabilty
+            availability
         });
     }
     catch(err){
