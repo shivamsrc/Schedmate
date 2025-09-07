@@ -10,12 +10,30 @@ AvailabilityRouter.get("/", async function(req, res){
         });
         const userId = user._id;
     
-        const availabilty = await AvailabilityModel.findOne({
+        const availability = await AvailabilityModel.findOne({
             userId
         });
 
         res.status(200).json({
-            availabilty
+            availability
+        });
+    }
+    catch(err){
+        console.log(err)
+        res.json({message: "Internal server error", err})
+    }
+});
+
+AvailabilityRouter.get("/:id", async function(req, res){
+    try{
+        const { id } = req.params;
+    
+        const availability = await AvailabilityModel.findOne({
+            userId: id
+        });
+
+        res.status(200).json({
+            availability
         });
     }
     catch(err){

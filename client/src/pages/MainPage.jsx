@@ -60,6 +60,15 @@ function Menu(props){
     const currentPath = location.pathname.split("/");
     const lastSegment = currentPath[currentPath.length -1];
     const navigate = useNavigate();
+    const [user, setUser] = useState({});
+
+    useEffect(()=>{
+        async function request(){
+            const response = await axios.get("http://localhost:3000/schedmate/user/main/", {withCredentials: true});
+            setUser(response.data.user);
+        }
+        request();
+    }, [])
 
     const HandleMenuSwitch = () => {
         setMenu((val) => !val)
@@ -72,7 +81,7 @@ function Menu(props){
         navigate("/user/availability")
     }
     const navigatePublicPage = () => {
-        navigate("/user/publicpage")          // give params
+        navigate(`/user/publicpage/${user._id}`)          // give params
     }
 
     return <div className={`sticky top-20 left-5 bg-zinc-800 ${horizontal ? "p-2 mt-2 -mb-4" : "p-4"} ${menuOn ? "px-4 rounded-2xl" : "px-1 rounded-full"} shadow-lg ${isDesktop ? "p-0 m-0" : (horizontal ? "p-2 mt-2 -mb-4" : "p-4", menuOn ? "px-4 rounded-2xl" : "px-1 rounded-full")} max-h-[86vh]`}>
