@@ -5,6 +5,7 @@ import MainPage from "./pages/MainPage";
 import Bookings from "./pages/Bookings";
 import Availability from "./pages/Availability";
 import PublicPage from "./pages/PublicPage";
+import MeetPage from "./pages/meetPage";
 
 export default function App(){
 
@@ -18,6 +19,7 @@ export default function App(){
                     <Route path="availability" element={<Availability/>}/>
                 </Route>
                 <Route path="/user/publicpage/*" element={<PublicPage/>}/>
+                <Route path="/schedule/meet/*" element={<MeetPage/>}/>
             </Routes>
         </BrowserRouter>
     </div>

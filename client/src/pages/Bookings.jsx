@@ -24,7 +24,7 @@ function Content(){
             setSpinner(true);
             const response = await axios.get("http://localhost:3000/schedmate/user/main/", {withCredentials: true});
             setUser(response.data.user);
-            setMeetings(response.data.meetings.filter(m => m.status === "scheduled"));
+            setMeetings(response.data.meetings.filter(m => m.status === "scheduled" && new Date(m.endTime) > Date.now()));
 
             if(response.status === 200){
                 setSpinner(false)

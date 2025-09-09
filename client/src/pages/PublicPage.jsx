@@ -22,6 +22,8 @@ export default function Content() {
     const MeetData = useRecoilValue(MeetAtom);
     const setMeetData = useSetRecoilState(MeetAtom);
     const [selctedSlot, setSelectedSlot] = useState(null);
+    const [meetings, setMeetings] = useState([]);
+    const [conflictTimeSlot, setConflictTimeSlot] = useState([]);
 
     const parts = location.pathname.split("/");
     const lastSegment = parts[parts.length - 1];
@@ -59,6 +61,43 @@ export default function Content() {
         sendReq();
     }, [lastSegment]);
 
+    useEffect(()=>{
+        async function meetReq(){
+            const response = await axios.get("http://localhost:3000/schedmate/user/main/", {withCredentials: true});
+            setMeetings(response.data.meetings.filter(m => m.status === "scheduled" && new Date(m.endTime) > Date.now()));
+        }
+        meetReq();
+    }, []);
+
+    // find conflict function
+    function findConflict(meetSlots, meetings){
+        const conflictSlots = [];
+
+        for(const slot of meetSlots){
+
+            const hasConflict = meetings.some(meeting => {
+                const meetingStart = new Date(meeting.startTime);
+                const meetingEnd = new Date(meeting.endTime);
+                const meetingDate = meetingStart.toISOString().split('T')[0];
+
+                return meetingDate === selectedDate &&
+                   slot.startTime < meetingEnd &&
+                   slot.endTime > meetingStart;
+            })
+
+            if(hasConflict){
+            conflictSlots.push({...slot, dateStr: selectedDate});
+        }
+        }
+        setConflictTimeSlot(conflictSlots);
+    }
+    useEffect(() => {
+        if (meetSlots.length > 0 && meetings.length > 0) {
+            findConflict(meetSlots, meetings);
+        }
+    }, [meetSlots, meetings]);
+
+
     // Handle date click
     const handleDateClick = (info) => {
         setSelectedDate(info.dateStr);
@@ -72,8 +111,15 @@ export default function Content() {
         }
         const { startTime, endTime } = dayData;
 
-        function generateInterval(start, end) {
+        function generateInterval(date, startTime, endTime) {
             const slots = [];
+
+            const start = new Date(date);
+            start.setHours(startTime.getHours(), startTime.getMinutes(), 0, 0);
+
+            const end = new Date(date);
+            end.setHours(endTime.getHours(), endTime.getMinutes(), 0, 0);
+
             let current = new Date(start);
 
             while (current < end) {
@@ -81,6 +127,8 @@ export default function Content() {
                 if (next > end) next = end;
 
                 slots.push({
+                    startTime: new Date(current),
+                    endTime: new Date(next),
                     start: current.toLocaleString([], {hour: "2-digit", minute: "2-digit",}),
                     end: next.toLocaleString([], {hour: "2-digit", minute: "2-digit",}),
                 });
@@ -91,7 +139,7 @@ export default function Content() {
             return slots;
         }
 
-        const interval = generateInterval(startTime, endTime);
+        const interval = generateInterval(info.date, startTime, endTime);
         setMeetSlots(interval);
     };
 
@@ -103,15 +151,28 @@ export default function Content() {
     };
 
     // time click handler
-    const TimeHandler = (obj, i) => {
-        setMeetData({start: obj.start, end: obj.end, requestedTo: lastSegment});
-        setShowButton(true);
-        setSelectedSlot(i);
+    const TimeHandler = (obj, i, isConflict) => {
+        if(isConflict) return;
+        setMeetData({start: obj.start, end: obj.end, requestedTo: lastSegment, selectedDate: selectedDate});
+        setSelectedSlot((prev)=>{
+            if(prev === null){
+                setShowButton(true);
+                return i
+            }
+            else if(prev === i){
+                setShowButton(false)
+                return null
+            }
+            else{
+                setShowButton(true);
+                return i
+            }
+        });
     }
 
     // meeting schedule handler
     const ProceedHandler = () => {
-        navigate("/schedule/meet")
+        navigate(`/schedule/meet/${lastSegment}`)
     }
 
   return (
@@ -171,11 +232,18 @@ export default function Content() {
                 </h2>
                 {isDayAvailable(selectedDay) ? (
                     <div className="flex flex-col gap-3">
-                        {meetSlots.map((obj, i) => (
-                            <div onClick={()=>TimeHandler(obj, i)} key={i} className={`px-4 py-2 rounded-lg bg-zinc-800 text-gray-200 shadow hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 hover:text-white transition cursor-pointer ${selctedSlot === i && "bg-gradient-to-r from-indigo-500 to-purple-600 text-white"}`}>
+
+                        {meetSlots.map((obj, i) => {
+                            const isConflict = conflictTimeSlot.some(
+                                c => c.dateStr === selectedDate && obj.startTime < c.endTime && obj.endTime > c.startTime
+                            );
+
+                            return (
+                            <div onClick={() => !isConflict && TimeHandler(obj, i, isConflict)}  key={i} className={`px-4 py-2 rounded-lg shadow transition ${isConflict || (obj.endTime < Date.now()) ? "bg-zinc-700 text-gray-500 opacity-60 cursor-not-allowed" : "bg-zinc-800 text-gray-200 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 hover:text-white cursor-pointer"} ${selctedSlot === i && !isConflict ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white" : ""}`}>
                                 {obj.start} - {obj.end}
                             </div>
-                        ))}
+                            )
+                        })}
                     </div>
                 ) : (
                     <div className="text-red-400 font-medium">Unavailable</div>

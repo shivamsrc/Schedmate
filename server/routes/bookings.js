@@ -96,7 +96,7 @@ BookingsRouter.patch("/meeting/:id/cancel", async function(req, res){           
 });
 
 // creating a meet
-BookingsRouter.post("/meeting/schedule", async function(req, res){
+BookingsRouter.post("/meeting/schedule/:id", async function(req, res){
     try{
         const email = req.user.profile.emails[0].value;
         const user = await UserModel.findOne({
@@ -108,7 +108,8 @@ BookingsRouter.post("/meeting/schedule", async function(req, res){
             userId: requestedBy
         }).populate('userId');
     
-        const {title, description, requestedTo, startTime, endTime} = req.body;             // here, requstedTo is the ObjectId
+        const {title, description, startTime, endTime} = req.body;             // here, requstedTo is the ObjectId
+        const requestedTo = req.params.id;
 
         const invitee = await UserModel.findOne({
             _id: requestedTo
