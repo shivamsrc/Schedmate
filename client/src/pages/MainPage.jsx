@@ -61,6 +61,7 @@ function Menu(props){
     const lastSegment = currentPath[currentPath.length -1];
     const navigate = useNavigate();
     const [user, setUser] = useState({});
+    const [copied, setCopied] = useState(false);
 
     useEffect(()=>{
         async function request(){
@@ -69,6 +70,12 @@ function Menu(props){
         }
         request();
     }, [])
+
+    useEffect(()=>{
+        if(!isDesktop){
+            setMenu(false)
+        }
+    }, [isDesktop]);
 
     const HandleMenuSwitch = () => {
         setMenu((val) => !val)
@@ -84,28 +91,38 @@ function Menu(props){
         navigate(`/user/publicpage/${user._id}`)          // give params
     }
 
+    const copyHandler = () => {
+        const text = `http://localhost:5173/user/publicpage/${user._id}`;
+        navigator.clipboard.writeText(text).then(()=>{
+            setCopied(true);
+            setTimeout(()=>{setCopied(false)}, 700)
+        })
+    }
+
     return <div className={`sticky top-20 left-5 bg-zinc-800 ${horizontal ? "p-2 mt-2 -mb-4" : "p-4"} ${menuOn ? "px-4 rounded-2xl" : "px-1 rounded-full"} shadow-lg ${isDesktop ? "p-0 m-0" : (horizontal ? "p-2 mt-2 -mb-4" : "p-4", menuOn ? "px-4 rounded-2xl" : "px-1 rounded-full")} max-h-[86vh]`}>
-            <div className={`flex ${horizontal ? "flex-row gap-2 justify-around" : "flex-col gap-4"}`}>
-                <div className={`flex items-center justify-end ${horizontal ? "py-0 px-1" : "py-2 px-3"} rounded-lg`}>
+            <div className={`flex ${horizontal ? " flex-row gap-2 justify-around" : "flex-col gap-4"}`}>
+                <div className={`flex items-center justify-end ${horizontal ? "py-0 px-1" : "py-2 px-3"} rounded-lg max-[390px]:px-2 max-[390px]:gap-1`}>
                     <div onClick={isDesktop ? HandleMenuSwitch : undefined} className="hover:bg-zinc-700 p-2 rounded-full"><i class="fa-solid fa-bars"></i></div>
                 </div>
-                <div onClick={navigateBooking} className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg hover:bg-zinc-700 ${lastSegment == "bookings" ? "bg-zinc-700" : ""}`}>
+                <div onClick={navigateBooking} className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg hover:bg-zinc-700 ${lastSegment == "bookings" ? "bg-zinc-700" : ""} max-[390px]:px-2 max-[390px]:gap-1`}>
                     {menuOn ? <div className="mr-3">Bookings</div> : null}
                     <div><i class="fa-solid fa-calendar-alt"></i></div>
                 </div>
-                <div onClick={navigateAvailability} className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg hover:bg-zinc-700 ${lastSegment == "availability" ? "bg-zinc-700" : ""}`}>
+                <div onClick={navigateAvailability} className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg hover:bg-zinc-700 ${lastSegment == "availability" ? "bg-zinc-700" : ""} max-[390px]:px-2 max-[390px]:gap-1`}>
                     {menuOn ? <div className="mr-3">Availability</div> : null}
                     <div><i class="fa-solid fa-clock"></i></div>
                 </div>
-                <div onClick={navigatePublicPage} className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg hover:bg-zinc-700 ${lastSegment == "public" ? "bg-zinc-700" : ""}`}>
+                <div onClick={navigatePublicPage} className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg hover:bg-zinc-700 ${lastSegment == "public" ? "bg-zinc-700" : ""} max-[390px]:px-2 max-[390px]:gap-1`}>
                     {menuOn ? <div className="mr-3">Public Page</div> : null}
                     <div><i class="fa-solid fa-user"></i></div>
                 </div>
-                <div className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg hover:bg-zinc-700`}>
+                <div onClick={copyHandler} className={`relative flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg hover:bg-zinc-700 cursor-pointer max-[390px]:px-2 max-[390px]:gap-1`}>
                     {menuOn ? <div className="mr-3">Copy Link</div> : null}
-                    <div><i class="fa-solid fa-copy"></i></div>
+                    <div className={`transition transform ${copied ? "scale-125 text-blue-400" : "scale-100 text-white"}`}>
+                        <i className="fa-solid fa-copy"></i>
+                    </div>
                 </div>
-                <div className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg text-red-400 hover:bg-zinc-700`}>
+                <div className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg text-red-400 hover:bg-zinc-700 max-[390px]:px-2 max-[390px]:gap-1`}>
                    {menuOn ? <div>Logout</div> : null}
                    <LogOut className="w-4 h-4" />
                 </div>
