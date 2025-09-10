@@ -6,15 +6,17 @@ import Spline from "@splinetool/react-spline";
 import {FcGoogle} from "react-icons/fc";
 import { authAtom } from "../atoms/authAtom";
 import {RecoilRoot, useRecoilValue, useSetRecoilState} from "recoil";
+import { useMediaQuery } from "../atoms/menuAtom";
 
 export default function LandingPage(){
+  const isDesktop775 = useMediaQuery("(min-width: 775px)")
 
     return (
     <RecoilRoot>
         <div className="relative min-h-screen text-white overflow-hidden">
             <Gradient/>
             <NavBar/>
-            <div className="flex flex-row justify-between">
+            <div className={`flex ${isDesktop775 ? "flex-row justify-between" : "flex-col-reverse w-full justify-center items-center"}`}>
                 <LeftSec/>
                 <RightSec/>
             </div>
@@ -46,38 +48,43 @@ function Gradient(){
 
 function NavBar(){
     const setShowAuthPage = useSetRecoilState(authAtom);
+    const isDesktop850 = useMediaQuery("(min-width: 850px)")
+    const isDesktop675 = useMediaQuery("(min-width: 675px)")
 
     function authPage(){
         setShowAuthPage((val) => !val)
     }
 
-    return <div className="relative inset-0 flex z-1 justify-between pt-10 pl-45 pr-45">
+    return <div className="relative inset-0 flex z-1 justify-between pt-10 xl:pl-45 xl:pr-45 md:pl-20 md:pr-20 pl-10 pr-10">
         <div className="text-xl font-bold">
             Schedmate
         </div>
-        <div className="flex w-110 justify-between text-[#d9d7e7] text-base">
+        {isDesktop675 ? <div className="flex w-110 justify-between text-[#d9d7e7] text-base">
             <ScrollLink to="" smooth={true} duration={500} className="cursor-pointer">SeeHow</ScrollLink>
             <ScrollLink to="" smooth={true} duration={500} className="cursor-pointer">Features</ScrollLink>
             <ScrollLink to="" smooth={true} duration={500} className="cursor-pointer">Feedback</ScrollLink>
-            <ScrollLink to="" smooth={true} duration={500} className="cursor-pointer">Contact us</ScrollLink>
-        </div>
+            <ScrollLink to="" smooth={true} duration={500} className="cursor-pointer">ContactUs</ScrollLink>
+        </div> : null}
+        { isDesktop850 ?
         <div onClick={authPage} className="px-6 py-2 rounded-4xl bg-gradient-to-r from-pink-500 to-orange-400 text-white cursor-pointer hover:brightness-110 transition font-semibold">
             Sign in
-        </div>
+        </div> : null
+        }
     </div>
 }
 
 function LeftSec(){
     const setShowAuthPage = useSetRecoilState(authAtom);
+    const isDesktop850 = useMediaQuery("(min-width: 850px)")
 
     function authPage(){
         setShowAuthPage((val) => !val)
     }
 
     return (
-        <div className="relative flex flex-col z-2 w-130 h-100 ml-45 mt-30">
+        <div className="relative flex flex-col z-2 max-w-130 h-100 xl:mt-30 md:mt-20 mt-10 md:ml-10 xl:ml-35 2xl:ml-45 ml-5 mr-5">
 
-            <div className="bg-white/5 backdrop-blur-md border border-white/30 rounded-xl p-7 pt-9 pb-9 text-5xl font-extrabold">
+            <div className="bg-white/5 backdrop-blur-md border border-white/30 rounded-xl p-7 pt-9 pb-9 sm:text-5xl text-4xl font-extrabold">
                 <div>Book your meeting</div>
                 <div>
                     <TypingText/>
@@ -85,7 +92,10 @@ function LeftSec(){
             </div>
 
             <div className="mt-7 mb-7 text-[#d9d7e7] text-base">
-                Stop wasting time juggling calendars. With Schedmate, share availability instantly, let people book in seconds, and keep every meeting organized and stress-free.
+              { isDesktop850 ? 
+              "Stop wasting time juggling calendars. With Schedmate, share availability instantly, let people book in seconds, and keep every meeting organized and stress-free."
+                : "Schedmate lets you share availability, get booked in seconds, and keep meetings stress-free."
+              }
             </div>
 
             <div onClick={authPage} className="px-6 py-2 rounded-4xl bg-gradient-to-r from-pink-500 to-orange-400 text-white cursor-pointer hover:brightness-110 transition font-semibold w-33 text-center">
@@ -136,7 +146,7 @@ function TypingText() {
         variants={sentence}
         initial="hidden"
         animate="visible"
-        className="font-extrabold text-5xl text-white"
+        className="font-extrabold sm:text-5xl text-4xl text-white"
       >
         {phrases[index].split("").map((char, i) => (
           <motion.span key={i} variants={letter}>
@@ -148,15 +158,26 @@ function TypingText() {
   );
 }
 
+// relative w-160 h-160 -mt-10 pr-20 flex flex-start
 
-function RightSec(){
+function RightSec() {
+  const isDesktop775 = useMediaQuery("(min-width: 775px)");
 
-    return (
-        <div className="relative w-160 h-160 -mt-10 pr-20 flex flex-start">
-            <Spline   scene="https://prod.spline.design/SdrzbS97Voe8k4RH/scene.splinecode"/>
-        </div>
-    );
+  return (
+    <div
+      className={`relative flex 
+        ${isDesktop775 ? "justify-start items-start" : "justify-center items-center"} 
+        w-90 h-90 mt-2
+        2xl:w-160 2xl:h-160 2xl:-mt-10 xl:pr-20
+        lg:w-120 lg:h-120 lg:mt-4 lg:pr-0
+        md:w-90 md:h-90 sm:mt-4 md:pr-0
+      `}
+    >
+      <Spline scene="https://prod.spline.design/SdrzbS97Voe8k4RH/scene.splinecode" />
+    </div>
+  );
 }
+
 
 function GoogleAuthCard() {
     const showAuthPage = useRecoilValue(authAtom);
@@ -172,7 +193,7 @@ function GoogleAuthCard() {
 
     return (
     <div onClick={authPage} className={`fixed inset-0 ${showAuthPage ? "opacity-100" : "opacity-0 pointer-events-none"} transition-all duration-300 ease-in-out flex items-center justify-center backdrop-blur-sm bg-black/40 z-50`}>
-        <div onClick={(e)=> e.stopPropagation()} className="w-[350px] bg-white/90 rounded-2xl shadow-3xl p-6 flex flex-col items-center gap-6">
+        <div onClick={(e)=> e.stopPropagation()} className="w-[350px] bg-white/90 rounded-2xl shadow-3xl p-6 flex flex-col items-center gap-6 mx-5">
             <h1 className="text-2xl font-semibold text-gray-800">Welcome</h1>
             <p className="text-gray-700">Sign in to continue</p>
 
