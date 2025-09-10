@@ -11,6 +11,7 @@ export default function ProfileSetupPage() {
   const [profilePicFile, setProfilePicFile] = useState(null);
   const [profilePic, setProfilePic] = useState(null);
   const [name, setName] = useState("");
+  const [bio, setBio] = useState("");
   const [timezone, setTimezone] = useState({});
   const [availability, setAvailability] = useState(
     Array(7).fill({ enabled: false, start: null, end: null })
@@ -41,6 +42,7 @@ export default function ProfileSetupPage() {
       const formData = new FormData();
       formData.append("profileImage", profilePicFile);
       formData.append("name", name);
+      formData.append("bio", bio);
       formData.append("timeZone", timezone.value);
 
       const availabilities = days.map((val, i) => ({
@@ -98,6 +100,19 @@ export default function ProfileSetupPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="name"
+            className="w-full rounded-xl border border-gray-300 px-3 sm:px-4 py-2 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition outline-none bg-white text-gray-800 placeholder-gray-400"
+          />
+        </div>
+
+        {/*Bio*/}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+          <textarea
+            type="text"
+            rows={3}
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            placeholder="describe yourself..."
             className="w-full rounded-xl border border-gray-300 px-3 sm:px-4 py-2 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition outline-none bg-white text-gray-800 placeholder-gray-400"
           />
         </div>

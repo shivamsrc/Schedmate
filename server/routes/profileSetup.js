@@ -25,7 +25,7 @@ const upload = multer({storage: storage});
 
 SetupRouter.post("/", upload.single("profileImage"), async function(req, res){                // this "profileImage" should be the name of input tag in form and the action of that form should redirct to this route 
     
-    const {name, timeZone, availabilitiesData} = req.body;
+    const {name, bio, timeZone, availabilitiesData} = req.body;
     const availabilities = JSON.parse(availabilitiesData);
     const profilePic = req.file?.path || req.file?.secure_url || req.user.profile.photos[0].value;
     const email = req.user.profile.emails[0].value;
@@ -39,6 +39,7 @@ SetupRouter.post("/", upload.single("profileImage"), async function(req, res){  
             email: email,
             emailUserId: id,
             name: name,
+            bio: bio,
             timezone: timeZone,
             avatarUrl: profilePic
         });
