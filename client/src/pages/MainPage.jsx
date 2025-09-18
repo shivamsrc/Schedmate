@@ -6,6 +6,8 @@ import { RecoilRoot, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { SpinnerAtom } from "../atoms/spinner";
+import { LogoutAtom } from "../atoms/logoutAtom";
 
 export default function MainPage(){
     const isDesktop = useMediaQuery("(min-width: 780px)");
@@ -22,6 +24,7 @@ export default function MainPage(){
                 </div>
             </div>
             {!isDesktop && <Menu horizontal={true}/>}
+            <LogOutCard/>
         </div>
     </RecoilRoot>
     )
@@ -62,6 +65,7 @@ function Menu(props){
     const navigate = useNavigate();
     const [user, setUser] = useState({});
     const [copied, setCopied] = useState(false);
+    const setShowLogoutCard = useSetRecoilState(LogoutAtom);
 
     useEffect(()=>{
         async function request(){
@@ -122,10 +126,61 @@ function Menu(props){
                         <i className="fa-solid fa-copy"></i>
                     </div>
                 </div>
-                <div className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg text-red-400 hover:bg-zinc-700 max-[390px]:px-2 max-[390px]:gap-1`}>
+                <div onClick={()=>{setShowLogoutCard(val=>!val)}} className={`flex items-center justify-between ${menuOn ? "px-3" : "px-5"} ${horizontal ? "py-0" : "py-2"} rounded-lg text-red-400 hover:bg-zinc-700 max-[390px]:px-2 max-[390px]:gap-1`}>
                    {menuOn ? <div>Logout</div> : null}
                    <LogOut className="w-4 h-4" />
                 </div>
             </div>
         </div>
+}
+
+function LogOutCard(){
+    const showLogoutCard = useRecoilValue(LogoutAtom);
+    const setShowLogoutCard = useSetRecoilState(LogoutAtom);
+    const setSpinner = useSetRecoilState(SpinnerAtom);
+    const navigate = useNavigate();
+
+    const handleLogoutCard = () => {
+        setShowLogoutCard(false)
+    }
+
+    const handleLogout = async () => {
+        setSpinner(true);
+        const res = await axios.get("http://localhost:3000/schedmate/auth/logout", {withCredentials: true});
+        if(res.status === 200){
+            setSpinner(false);
+            navigate("/");
+        }
+    }
+
+    return <div 
+  onClick={handleLogoutCard} 
+  className={`fixed inset-0 ${showLogoutCard ? "opacity-100" : "opacity-0 pointer-events-none"} transition-all duration-300 ease-in-out flex items-center justify-center backdrop-blur-sm bg-black/40 z-50`}
+>
+  <div 
+    onClick={(e)=> e.stopPropagation()} 
+    className="w-[350px] bg-white/90 rounded-2xl shadow-3xl p-6 flex flex-col items-center gap-6 mx-5"
+  >
+    <h1 className="text-lg font-medium text-gray-800 text-center">
+      Are you sure you want to log out?
+    </h1>
+
+    <div className="flex flex-col w-full gap-3">
+      <button
+        onClick={handleLogout}
+        className="w-full flex items-center justify-center gap-2 bg-red-500 text-white hover:bg-red-600 rounded-xl shadow-md py-3 font-medium transition"
+      >
+        Log out
+      </button>
+
+      <button 
+        onClick={()=> setShowLogoutCard(false)} 
+        className="w-full flex items-center justify-center gap-2 bg-white text-gray-700 hover:bg-gray-100 rounded-xl border shadow-sm py-3 font-medium transition"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
 }

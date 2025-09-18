@@ -8,6 +8,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { useNavigate } from "react-router-dom";
 import { MeetAtom } from "../atoms/meet";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { FcGoogle } from "react-icons/fc";
 
 export default function Content() {
     const [user, setUser] = useState({});
@@ -24,21 +25,27 @@ export default function Content() {
     const [selctedSlot, setSelectedSlot] = useState(null);
     const [meetings, setMeetings] = useState([]);
     const [conflictTimeSlot, setConflictTimeSlot] = useState([]);
+    const [Login, setLogin] = useState(false);
 
     const parts = location.pathname.split("/");
     const lastSegment = parts[parts.length - 1];
 
     useEffect(() => {
         async function request() {
-            try {
+            try{
                 const res = await axios.get(
                 `http://localhost:3000/schedmate/user/${lastSegment}`,
                 { withCredentials: true }
                 );
+                setLogin(false);
                 setUser(res.data.user);
-            } 
-            catch (err) {
-                console.error(err);
+            }
+            catch(err){
+                if (err.response && err.response.status === 401) {
+                setLogin(true); // trigger auth card
+                } else {
+                    console.error("Error fetching user:", err);
+                }
             }
         }
         request();
@@ -175,6 +182,11 @@ export default function Content() {
         navigate(`/schedule/meet/${lastSegment}`)
     }
 
+    // handle auth
+    const handleGoogleAuth = () => {
+        window.location.href = `http://localhost:3000/schedmate/auth/signin?state=/user/publicpage/${lastSegment}`;
+    };
+
   return (
     <div className="min-h-screen w-full flex flex-col items-center p-6 sm:p-10 bg-gradient-to-br from-zinc-950 via-black to-zinc-950 text-white space-y-12">
         {/* User details */}
@@ -259,6 +271,23 @@ export default function Content() {
             )}
         </div>
         )}
+
+        {/* auth card */}
+        <div className={`fixed inset-0 ${Login ? "opacity-100" : "opacity-0 pointer-events-none"} transition-all duration-300 ease-in-out flex items-center justify-center backdrop-blur-sm bg-black/40 z-50`}>
+            <div onClick={(e)=> e.stopPropagation()} className="w-[350px] bg-white/90 rounded-2xl shadow-3xl p-6 flex flex-col items-center gap-6 mx-5">
+                <h1 className="text-2xl font-semibold text-gray-800">Welcome</h1>
+                <p className="text-gray-700">Sign in to continue</p>
+            
+                <button
+                onClick={handleGoogleAuth}
+                className="w-full flex items-center justify-center gap-3 bg-white text-gray-800 hover:bg-gray-100 rounded-xl border shadow-md py-3"
+                >
+                <FcGoogle size={22} />
+                <span>Continue with Google</span>
+                </button>
+            </div>
+        </div>
     </div>
     );
 }
+

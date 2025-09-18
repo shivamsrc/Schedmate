@@ -26,15 +26,19 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 //FE: CLICK ON SINGIN IN FE AND YOU'LL BE HERE
-AuthRouter.get("/signin", passport.authenticate('google', {
-    scope: [
-        'profile',
-        'email',
-        'https://www.googleapis.com/auth/calendar'
-    ],
-    accessType: "offline",
-    prompt: 'consent login'
-}));
+AuthRouter.get("/signin", (req, res, next) => { 
+    const state = req.query.state || "/";
+    passport.authenticate('google', {
+        scope: [
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/calendar'
+        ],
+        accessType: "offline",
+        prompt: 'consent login',
+        state
+    })(req, res, next);
+});
 
 
 // after authentication we'll be redirected to this page
@@ -43,6 +47,7 @@ AuthRouter.get("/verify", passport.authenticate('google', {failureRedirect: "/"}
     async function(req, res){                                                                // here this 'req' have access to the profile and email and for calendar you have to call through the api.
         const email = req.user.profile.emails[0].value;
         const id = req.user.profile.id;
+        const state = req.query.state || null;
 
         const user = await UserModel.findOne({
             email,
@@ -54,7 +59,12 @@ AuthRouter.get("/verify", passport.authenticate('google', {failureRedirect: "/"}
             res.redirect("http://localhost:5173/schedmate/profile/setup")                   // if no profile has been setup already by the user
         }
         else{
-            res.redirect("http://localhost:5173/user/bookings")                // if there exists a profile of the user
+            if (state && state.startsWith("/user/")) {
+              // redirect back to public page
+              res.redirect(`http://localhost:5173${state}`);
+          } else {
+              res.redirect("http://localhost:5173/user/bookings");
+          }
         }
     }
 );
@@ -71,7 +81,7 @@ AuthRouter.get("/logout", function(req, res){
             }
 
             res.clearCookie("connect.sid", {path: "/"});                                    // not necessary but clears the session id stored on browser for entire path
-            res.redirect("/");
+            res.send("logged-out");
         })
     });
 });
