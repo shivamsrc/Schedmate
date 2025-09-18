@@ -59,6 +59,7 @@ export default function ProfileSetupPage() {
         formData,
         { withCredentials: true }
       );
+      console.log(response);
 
       if(response.status === 201){
         setSpinner(false);

@@ -76,6 +76,7 @@ function Content(){
                 setAvailability(availabilities);
                 setCheckAvailabilityChange(availabilities);
                 setSpinner(false);
+                setSaveButton(false);
             }
             sendPutReq();
         }

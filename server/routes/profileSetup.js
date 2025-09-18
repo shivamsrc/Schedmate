@@ -59,7 +59,7 @@ SetupRouter.post("/", upload.single("profileImage"), async function(req, res){  
         res.status(201).json({message: "completed"});
     }
     catch(err){
-        res.status(500).json(`profile setup failed: ${err}`)
+        res.status(500).json(`profile setup failed: ${err.message}`)
     }
 });
 
