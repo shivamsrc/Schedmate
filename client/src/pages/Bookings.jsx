@@ -19,6 +19,7 @@ function Content(){
     const spinner = useRecoilValue(SpinnerAtom);
     const setSpinner = useSetRecoilState(SpinnerAtom);
     const API_BASE = import.meta.env.VITE_API_URL;
+    const [showCancelBtn, setShowCancelBtn] = useState(null);
 
     useEffect(() => {
         async function request(){
@@ -33,6 +34,10 @@ function Content(){
         }
         request();
     }, []);
+
+    const handleCancelBtn = (id) => {
+        setShowCancelBtn((prev)=> prev === id ? null : id)
+    }
 
     return (
     <div className={`${isDesktop ? "ml-7" : "ml-0"} flex flex-1`}>
@@ -74,8 +79,8 @@ function Content(){
 
             {/* Right (Menu) */}
                 <div className="flex text-gray-400 cursor-pointer relative group">
-                    <i className="fa-solid fa-ellipsis hover:text-white"></i>
-                    <div className={`invisible opacity-0 flex group-hover:visible group-hover:opacity-100 absolute top-5 right-5 items-center gap-2 px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-gray-300 hover:bg-red-500 hover:text-white shadow-md cursor-pointer transition duration-400 delay-100`}>
+                    <i onClick={()=>handleCancelBtn(meeting._id)} className="fa-solid fa-ellipsis hover:text-white"></i>
+                    <div className={`invisible opacity-0 flex group-hover:visible group-hover:opacity-100 ${showCancelBtn === meeting._id ? "visible opacity-100" : "invisible opacity-0"} absolute top-5 right-5 items-center gap-2 px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-gray-300 hover:bg-red-500 hover:text-white shadow-md cursor-pointer transition duration-400 delay-100`}>
                         <span 
                             onClick={async ()=>{
                                 setSpinner(true);
