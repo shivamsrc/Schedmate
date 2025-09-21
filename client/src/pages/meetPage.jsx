@@ -26,21 +26,31 @@ export default function SchedulePage() {
         setShowButton(title && description && startTime && endTime);
     };
 
-    function convertTo24Hour(time) {
+    function formatTo12Hour(time24) {
+        if (!time24) return "";
 
-        const amPmMatch = time.match(/(\d+):(\d+)\s*(\w+)/);
-        if(amPmMatch){
-            const [_, h, m, period] = amPmMatch;
-            let hour = parseInt(h);
-            if (period === "PM" && hour !== 12) hour += 12;
-            if (period === "AM" && hour === 12) hour = 0;
-            return `${hour.toString().padStart(2, "0")}:${m}`;
+        const [hours, minutes] = time24.split(':');
+        const hour = parseInt(hours, 10);                        // parse the string to int using decimal number system
+
+        const period = hour >= 12 ? 'PM' : 'AM';
+
+        let hour12 = hour % 12;
+        if (hour12 === 0) {
+            hour12 = 12;
         }
-        
-        return time;
+
+        return `${hour12}:${minutes} ${period}`;
     }
 
+    useEffect(()=>{
+        const startTime12 = formatTo12Hour(meet.start);
+        const endTime12 = formatTo12Hour(meet.end);
+        setStartTime(startTime12);
+        setEndTime(endTime12);
+    }, []);
+
     const handleSchedule = async () => {
+
         setStatus("processing");
         setStart(true);
         try{
@@ -48,8 +58,8 @@ export default function SchedulePage() {
                 {
                     title: title,
                     description: description,
-                    startTime: new Date(`${meet.selectedDate}T${convertTo24Hour(meet.start)}:00`).toISOString(),
-                    endTime: new Date(`${meet.selectedDate}T${convertTo24Hour(meet.end)}:00`).toISOString()
+                    startTime: new Date(`${meet.selectedDate}T${meet.start}:00`).toISOString(),
+                    endTime: new Date(`${meet.selectedDate}T${meet.end}:00`).toISOString(),
                 },
                 {withCredentials: true}
             )
@@ -112,7 +122,7 @@ export default function SchedulePage() {
                         <input
                             type="time-local"
                             readOnly
-                            value={meet.start}
+                            value={startTime}
                             className="px-5 py-3 rounded-2xl bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"
                         />
                     </div>
@@ -122,7 +132,7 @@ export default function SchedulePage() {
                         <input
                             type="time-local"
                             readOnly
-                            value={meet.end}
+                            value={endTime}
                             className="px-5 py-3 rounded-2xl bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-purple-500 text-lg"
                         />
                     </div>

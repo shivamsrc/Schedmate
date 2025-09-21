@@ -139,6 +139,8 @@ export default function Content() {
                     endTime: new Date(next),
                     start: current.toLocaleString([], {hour: "2-digit", minute: "2-digit",}),
                     end: next.toLocaleString([], {hour: "2-digit", minute: "2-digit",}),
+                    start24: `${current.getHours().toString().padStart(2, "0")}:${current.getMinutes().toString().padStart(2, "0")}`,
+                    end24: `${next.getHours().toString().padStart(2, "0")}:${next.getMinutes().toString().padStart(2, "0")}`
                 });
 
                 current = next;
@@ -161,7 +163,7 @@ export default function Content() {
     // time click handler
     const TimeHandler = (obj, i, isConflict) => {
         if(isConflict) return;
-        setMeetData({start: obj.start, end: obj.end, requestedTo: lastSegment, selectedDate: selectedDate});
+        setMeetData({start: obj.start24, end: obj.end24, requestedTo: lastSegment, selectedDate: selectedDate});
         setSelectedSlot((prev)=>{
             if(prev === null){
                 setShowButton(true);
