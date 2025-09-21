@@ -11,9 +11,10 @@ const { BookingsRouter } = require("./routes/bookings");
 const { AvailabilityRouter } = require("./routes/availability");
 const { publicRouter } = require("./routes/publicPage");
 const isProduction = process.env.NODE_ENV === "production";
-
+console.log(isProduction);
 
 const app = express();
+app.set('trust proxy', 1);
 app.use(cors({
     origin: ["http://localhost:5173", "https://schedmate.vercel.app"],
     credentials: true
