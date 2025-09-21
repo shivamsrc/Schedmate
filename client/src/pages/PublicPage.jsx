@@ -137,8 +137,8 @@ export default function Content() {
                 slots.push({
                     startTime: new Date(current),
                     endTime: new Date(next),
-                    start: current.toLocaleString([], {hour: "2-digit", minute: "2-digit",}),
-                    end: next.toLocaleString([], {hour: "2-digit", minute: "2-digit",}),
+                    start: current.toLocaleString([], {hour: "2-digit", minute: "2-digit", hour12: true}),
+                    end: next.toLocaleString([], {hour: "2-digit", minute: "2-digit", hour12: true}),
                     start24: `${current.getHours().toString().padStart(2, "0")}:${current.getMinutes().toString().padStart(2, "0")}`,
                     end24: `${next.getHours().toString().padStart(2, "0")}:${next.getMinutes().toString().padStart(2, "0")}`
                 });
