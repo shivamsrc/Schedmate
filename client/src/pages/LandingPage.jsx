@@ -186,13 +186,14 @@ function RightSec() {
 function GoogleAuthCard() {
     const showAuthPage = useRecoilValue(authAtom);
     const setShowAuthPage = useSetRecoilState(authAtom);
+    const API_BASE =  process.env.REACT_APP_API_URL;
 
     function authPage(){
         setShowAuthPage(false)
     }
 
     const handleGoogleAuth = () => {
-    window.location.href = "http://localhost:3000/schedmate/auth/signin";
+    window.location.href = `${API_BASE}/schedmate/auth/signin`;
     };
 
     return (

@@ -26,6 +26,7 @@ export default function Content() {
     const [meetings, setMeetings] = useState([]);
     const [conflictTimeSlot, setConflictTimeSlot] = useState([]);
     const [Login, setLogin] = useState(false);
+    const API_BASE =  process.env.REACT_APP_API_URL;
 
     const parts = location.pathname.split("/");
     const lastSegment = parts[parts.length - 1];
@@ -34,7 +35,7 @@ export default function Content() {
         async function request() {
             try{
                 const res = await axios.get(
-                `http://localhost:3000/schedmate/user/${lastSegment}`,
+                `${API_BASE}/schedmate/user/${lastSegment}`,
                 { withCredentials: true }
                 );
                 setLogin(false);
@@ -55,7 +56,7 @@ export default function Content() {
     useEffect(() => {
         async function sendReq() {
             const response = await axios.get(
-                `http://localhost:3000/schedmate/user/availability/${lastSegment}`,
+                `${API_BASE}/schedmate/user/availability/${lastSegment}`,
                 { withCredentials: true }
             );
             const availabilities = response.data.availability.availabilities.map((day) => ({
@@ -70,7 +71,7 @@ export default function Content() {
 
     useEffect(()=>{
         async function meetReq(){
-            const response = await axios.get("http://localhost:3000/schedmate/user/main/", {withCredentials: true});
+            const response = await axios.get(`${API_BASE}/schedmate/user/main/`, {withCredentials: true});
             setMeetings(response.data.meetings.filter(m => m.status === "scheduled" && new Date(m.endTime) > Date.now()));
         }
         meetReq();
@@ -184,7 +185,7 @@ export default function Content() {
 
     // handle auth
     const handleGoogleAuth = () => {
-        window.location.href = `http://localhost:3000/schedmate/auth/signin?state=/user/publicpage/${lastSegment}`;
+        window.location.href = `${API_BASE}/schedmate/auth/signin?state=/user/publicpage/${lastSegment}`;
     };
 
   return (

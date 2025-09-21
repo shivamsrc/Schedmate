@@ -34,10 +34,11 @@ function Headers(){
     const isDesktop = useMediaQuery("(min-width: 780px)");
     const isDesktopLow = useMediaQuery("(max-width: 450px");
     const [user, setUser] = useState({});
+    const API_BASE =  process.env.REACT_APP_API_URL;
 
     useEffect(()=>{
         async function request(){
-            const response = await axios.get("http://localhost:3000/schedmate/user/main/", {withCredentials: true});
+            const response = await axios.get(`${API_BASE}/schedmate/user/main/`, {withCredentials: true});
             setUser(response.data.user);
         }
         request();
@@ -66,10 +67,11 @@ function Menu(props){
     const [user, setUser] = useState({});
     const [copied, setCopied] = useState(false);
     const setShowLogoutCard = useSetRecoilState(LogoutAtom);
+    const API_BASE =  process.env.REACT_APP_API_URL;
 
     useEffect(()=>{
         async function request(){
-            const response = await axios.get("http://localhost:3000/schedmate/user/main/", {withCredentials: true});
+            const response = await axios.get(`${API_BASE}/schedmate/user/main/`, {withCredentials: true});
             setUser(response.data.user);
         }
         request();
@@ -139,6 +141,7 @@ function LogOutCard(){
     const setShowLogoutCard = useSetRecoilState(LogoutAtom);
     const setSpinner = useSetRecoilState(SpinnerAtom);
     const navigate = useNavigate();
+    const API_BASE =  process.env.REACT_APP_API_URL;
 
     const handleLogoutCard = () => {
         setShowLogoutCard(false)
@@ -146,7 +149,7 @@ function LogOutCard(){
 
     const handleLogout = async () => {
         setSpinner(true);
-        const res = await axios.get("http://localhost:3000/schedmate/auth/logout", {withCredentials: true});
+        const res = await axios.get(`${API_BASE}/schedmate/auth/logout`, {withCredentials: true});
         if(res.status === 200){
             setSpinner(false);
             navigate("/");

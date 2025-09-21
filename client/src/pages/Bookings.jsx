@@ -18,11 +18,12 @@ function Content(){
     const [meetings, setMeetings] = useState([]);
     const spinner = useRecoilValue(SpinnerAtom);
     const setSpinner = useSetRecoilState(SpinnerAtom);
+    const API_BASE =  process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         async function request(){
             setSpinner(true);
-            const response = await axios.get("http://localhost:3000/schedmate/user/main/", {withCredentials: true});
+            const response = await axios.get(`${API_BASE}/schedmate/user/main/`, {withCredentials: true});
             setUser(response.data.user);
             setMeetings(response.data.meetings.filter(m => m.status === "scheduled" && new Date(m.endTime) > Date.now()));
 
@@ -78,7 +79,7 @@ function Content(){
                         <span 
                             onClick={async ()=>{
                                 setSpinner(true);
-                                await axios.patch(`http://localhost:3000/schedmate/user/main/meeting/${meeting._id}/cancel`, {}, {withCredentials: true})
+                                await axios.patch(`${API_BASE}/schedmate/user/main/meeting/${meeting._id}/cancel`, {}, {withCredentials: true})
                                 setMeetings(prev => prev.filter(m => m._id !== meeting._id));
                                 setSpinner(false);
                             }}>

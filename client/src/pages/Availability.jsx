@@ -21,11 +21,12 @@ function Content(){
     const setSpinner = useSetRecoilState(SpinnerAtom);
     const [saveButton, setSaveButton] = useState(false);
     const [Incomplete, setIncomplete] = useState(false);
+    const API_BASE =  process.env.REACT_APP_API_URL;
 
     useEffect(()=>{
         async function sendRequest(){
             setSpinner(true);
-            const response = await axios.get("http://localhost:3000/schedmate/user/availability", {withCredentials: true});
+            const response = await axios.get(`${API_BASE}/schedmate/user/availability`, {withCredentials: true});
             const availabilities = response.data.availability.availabilities.map((day)=> (
                 {...day, 
                  startTime: day.startTime ? new Date(day.startTime) : null,
@@ -64,7 +65,7 @@ function Content(){
         {
             async function sendPutReq(){
                 setSpinner(true);
-                const response = await axios.put("http://localhost:3000/schedmate/user/availability/update", 
+                const response = await axios.put(`${API_BASE}/schedmate/user/availability/update`, 
                     {availabilities: availability}, 
                     {withCredentials: true}
                 );

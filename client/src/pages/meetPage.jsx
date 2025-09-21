@@ -16,6 +16,7 @@ export default function SchedulePage() {
     const [start, setStart] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
+    const API_BASE =  process.env.REACT_APP_API_URL;
 
     const parts = location.pathname.split("/");
     const lastSegment = parts[parts.length - 1];
@@ -36,7 +37,7 @@ export default function SchedulePage() {
         setStatus("processing");
         setStart(true);
         try{
-            const res = await axios.post(`http://localhost:3000/schedmate/user/main/meeting/schedule/${lastSegment}`, 
+            const res = await axios.post(`${API_BASE}/schedmate/user/main/meeting/schedule/${lastSegment}`, 
                 {
                     title: title,
                     description: description,

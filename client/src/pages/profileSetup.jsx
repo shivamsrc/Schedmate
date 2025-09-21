@@ -7,6 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function ProfileSetupPage() {
+  const API_BASE =  process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const [profilePicFile, setProfilePicFile] = useState(null);
   const [profilePic, setProfilePic] = useState(null);
@@ -55,7 +56,7 @@ export default function ProfileSetupPage() {
       formData.append("availabilitiesData", JSON.stringify(availabilities));
 
       const response = await axios.post(
-        "http://localhost:3000/schedmate/profile/setup",
+        `${API_BASE}/schedmate/profile/setup`,
         formData,
         { withCredentials: true }
       );
