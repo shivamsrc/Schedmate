@@ -10,6 +10,7 @@ const { SetupRouter } = require("./routes/profileSetup");
 const { BookingsRouter } = require("./routes/bookings");
 const { AvailabilityRouter } = require("./routes/availability");
 const { publicRouter } = require("./routes/publicPage");
+const isProduction = process.env.NODE_ENV === "production";
 
 
 const app = express();
@@ -26,7 +27,9 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        maxAge: 60*60*1000
+        maxAge: 60*60*1000,
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax"
     }
 }));
 
