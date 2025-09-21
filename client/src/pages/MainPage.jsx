@@ -99,7 +99,7 @@ function Menu(props){
     }
 
     const copyHandler = () => {
-        const text = `http://localhost:5173/user/publicpage/${user._id}`;
+        const text = `https://schedmate.vercel.app/user/publicpage/${user._id}`;
         navigator.clipboard.writeText(text).then(()=>{
             setCopied(true);
             setTimeout(()=>{setCopied(false)}, 700)
