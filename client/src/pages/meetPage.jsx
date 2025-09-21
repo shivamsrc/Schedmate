@@ -55,6 +55,7 @@ export default function SchedulePage() {
             }
         }
         catch (err) {
+            console.log(err);
             setStatus("error");
         } 
     }
