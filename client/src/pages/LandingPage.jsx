@@ -7,6 +7,8 @@ import {FcGoogle} from "react-icons/fc";
 import { authAtom } from "../atoms/authAtom";
 import {RecoilRoot, useRecoilValue, useSetRecoilState} from "recoil";
 import { useMediaQuery } from "../atoms/menuAtom";
+import videoFile from "../atoms/cursorful-video-1758386311228.mp4";
+import { FaTwitter, FaTelegramPlane, FaEnvelope } from "react-icons/fa";
 
 export default function LandingPage(){
   const isDesktop775 = useMediaQuery("(min-width: 775px)")
@@ -21,6 +23,8 @@ export default function LandingPage(){
                 <RightSec/>
             </div>
             <GoogleAuthCard/>
+            <SeeHow/>
+            <Footer/>
         </div>
     </RecoilRoot>
   );
@@ -60,10 +64,10 @@ function NavBar(){
             Schedmate
         </div>
         {isDesktop675 ? <div className="flex w-110 justify-between text-[#d9d7e7] text-base">
-            <ScrollLink to="" smooth={true} duration={500} className="cursor-pointer">SeeHow</ScrollLink>
+            <ScrollLink to="seehow" smooth={true} duration={500} className="cursor-pointer">SeeHow</ScrollLink>
             <ScrollLink to="" smooth={true} duration={500} className="cursor-pointer">Features</ScrollLink>
             <ScrollLink to="" smooth={true} duration={500} className="cursor-pointer">Feedback</ScrollLink>
-            <ScrollLink to="" smooth={true} duration={500} className="cursor-pointer">ContactUs</ScrollLink>
+            <ScrollLink to="contactus" smooth={true} duration={500} className="cursor-pointer">ContactUs</ScrollLink>
         </div> : null}
         { isDesktop850 ?
         <div onClick={authPage} className="px-6 py-2 rounded-4xl bg-gradient-to-r from-pink-500 to-orange-400 text-white cursor-pointer hover:brightness-110 transition font-semibold">
@@ -205,6 +209,52 @@ function GoogleAuthCard() {
             <span>Continue with Google</span>
             </button>
         </div>
+    </div>
+  );
+}
+
+function SeeHow() {
+  return (
+    <div id="seehow" className="relative w-screen flex flex-col items-start px-5 md:py-10 md:mt-0 sm:-mt-5 py-0 pb-5 md:px-10 lg:px-20">
+      <div className="text-white text-xl font-bold sm:mb-8 mb-3 lg:ml-25 ml-4">
+        See How
+      </div>
+
+      <div className="w-full flex justify-around">
+        <video
+          className="rounded-2xl shadow-lg w-full max-w-4xl"
+          controls
+          autoPlay
+          loop
+          muted
+        >
+          <source src={videoFile} type="video/mp4" />
+        </video>
+      </div>
+    </div>
+  );
+}
+
+function Footer() {
+  const isDesktop490 = useMediaQuery("(min-width: 490px)");
+
+  return (
+    <div id="contactus" className={`relative z-20 flex ${isDesktop490 ? 'flex-row' : 'flex-col space-y-2 text-sm'} justify-between items-center p-3 mt-5 bg-black/10 backdrop-blur-md shadow-lg rounded-t-sm text-white`}>
+      <div>{'\u00A9'} 2025 Schedmate. All rights reserved.</div>
+
+      <div className="flex space-x-4 pr-2">
+        <a href="https://twitter.com/shivam_src" target="_blank" rel="noopener noreferrer">
+          <FaTwitter size={isDesktop490 ? 24 : 16} />
+        </a>
+
+        <a href="https://t.me/shivamsrc" target="_blank" rel="noopener noreferrer">
+          <FaTelegramPlane size={isDesktop490 ? 24 : 16} />
+        </a>
+
+        <a href="mailto:shivamkumareng7@gmail.com">
+          <FaEnvelope size={isDesktop490 ? 24 : 16} />
+        </a>
+      </div>
     </div>
   );
 }
