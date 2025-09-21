@@ -14,7 +14,7 @@ const { publicRouter } = require("./routes/publicPage");
 
 const app = express();
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://schedmate.vercel.app"],
     credentials: true
 }));
 app.use(express.json());
