@@ -27,11 +27,17 @@ export default function SchedulePage() {
     };
 
     function convertTo24Hour(time) {
-        const [_, h, m, period] = time.match(/(\d+):(\d+) (\w+)/);
-        let hour = parseInt(h);
-        if (period === "PM" && hour !== 12) hour += 12;
-        if (period === "AM" && hour === 12) hour = 0;
-        return `${hour.toString().padStart(2, "0")}:${m}`;
+
+        const amPmMatch = time.match(/(\d+):(\d+)\s*(\w+)/);
+        if(amPmMatch){
+            const [_, h, m, period] = amPmMatch;
+            let hour = parseInt(h);
+            if (period === "PM" && hour !== 12) hour += 12;
+            if (period === "AM" && hour === 12) hour = 0;
+            return `${hour.toString().padStart(2, "0")}:${m}`;
+        }
+        
+        return time;
     }
 
     const handleSchedule = async () => {
