@@ -9,7 +9,7 @@ const { UserModel } = require("../db");
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/schedmate/auth/verify"
+    callbackURL: process.env.GOOGLE_REDIRECT_URI
     },
     function(accessToken, refreshToken, profile, done){
         const user = {
@@ -48,6 +48,7 @@ AuthRouter.get("/verify", passport.authenticate('google', {failureRedirect: "/"}
         const email = req.user.profile.emails[0].value;
         const id = req.user.profile.id;
         const state = req.query.state || null;
+        const BASE_API = process.env.BASE_API;
 
         const user = await UserModel.findOne({
             email,
@@ -56,14 +57,14 @@ AuthRouter.get("/verify", passport.authenticate('google', {failureRedirect: "/"}
 
         if(!user){
             // CHANGE IT TO FE PAGE ROUTE THAT WILL SEND POST REQUEST ON THIS ROUTE
-            res.redirect("http://localhost:5173/schedmate/profile/setup")                   // if no profile has been setup already by the user
+            res.redirect(`${BASE_API}/schedmate/profile/setup`)                   // if no profile has been setup already by the user
         }
         else{
             if (state && state.startsWith("/user/")) {
               // redirect back to public page
-              res.redirect(`http://localhost:5173${state}`);
+              res.redirect(`${BASE_API}${state}`);
           } else {
-              res.redirect("http://localhost:5173/user/bookings");
+              res.redirect(`${BASE_API}/user/bookings`);
           }
         }
     }
