@@ -26,7 +26,7 @@ export default function Content() {
     const [meetings, setMeetings] = useState([]);
     const [conflictTimeSlot, setConflictTimeSlot] = useState([]);
     const [Login, setLogin] = useState(false);
-    const API_BASE =  process.env.REACT_APP_API_URL;
+    const API_BASE = import.meta.env.VITE_API_URL;
 
     const parts = location.pathname.split("/");
     const lastSegment = parts[parts.length - 1];

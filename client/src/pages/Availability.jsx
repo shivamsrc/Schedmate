@@ -21,7 +21,7 @@ function Content(){
     const setSpinner = useSetRecoilState(SpinnerAtom);
     const [saveButton, setSaveButton] = useState(false);
     const [Incomplete, setIncomplete] = useState(false);
-    const API_BASE =  process.env.REACT_APP_API_URL;
+    const API_BASE = import.meta.env.VITE_API_URL;
 
     useEffect(()=>{
         async function sendRequest(){

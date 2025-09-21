@@ -16,7 +16,8 @@ export default function SchedulePage() {
     const [start, setStart] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
-    const API_BASE =  process.env.REACT_APP_API_URL;
+    const API_BASE = import.meta.env.VITE_API_URL;
+
 
     const parts = location.pathname.split("/");
     const lastSegment = parts[parts.length - 1];

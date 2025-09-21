@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function ProfileSetupPage() {
-  const API_BASE =  process.env.REACT_APP_API_URL;
+  const API_BASE = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [profilePicFile, setProfilePicFile] = useState(null);
   const [profilePic, setProfilePic] = useState(null);
