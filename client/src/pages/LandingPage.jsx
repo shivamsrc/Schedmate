@@ -1,5 +1,5 @@
 import {Link as ScrollLink} from "react-scroll";
-import {Link as RouterLink} from "react-router-dom";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {useState, useEffect} from "react";
 import {motion} from "framer-motion";
 import Spline from "@splinetool/react-spline";
@@ -54,9 +54,14 @@ function NavBar(){
     const setShowAuthPage = useSetRecoilState(authAtom);
     const isDesktop850 = useMediaQuery("(min-width: 850px)")
     const isDesktop675 = useMediaQuery("(min-width: 675px)")
+    const navigate = useNavigate();
 
     function authPage(){
         setShowAuthPage((val) => !val)
+    }
+
+    const privacy = ()=> {
+      navigate("/schedmate/privacy-policy");
     }
 
     return <div className="relative inset-0 flex z-1 justify-between pt-10 xl:pl-45 xl:pr-45 md:pl-20 md:pr-20 pl-10 pr-10">
@@ -66,7 +71,7 @@ function NavBar(){
         {isDesktop675 ? <div className="flex w-110 justify-between text-[#d9d7e7] text-base">
             <ScrollLink to="seehow" smooth={true} duration={500} className="cursor-pointer">SeeHow</ScrollLink>
             <ScrollLink to="" smooth={true} duration={500} className="cursor-pointer">Features</ScrollLink>
-            <ScrollLink to="" smooth={true} duration={500} className="cursor-pointer">Feedback</ScrollLink>
+            <div onClick={privacy} className="cursor-pointer">Privacy</div>
             <ScrollLink to="contactus" smooth={true} duration={500} className="cursor-pointer">ContactUs</ScrollLink>
         </div> : null}
         { isDesktop850 ?

@@ -6,6 +6,7 @@ import Bookings from "./pages/Bookings";
 import Availability from "./pages/Availability";
 import PublicPage from "./pages/PublicPage";
 import MeetPage from "./pages/meetPage";
+import Privacy from "./pages/privacyPolicy";
 
 export default function App(){
 
@@ -13,6 +14,7 @@ export default function App(){
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<LandingPage/>}/>
+                <Route path="/schedmate/privacy-policy" element={<Privacy/>}/>
                 <Route path="/schedmate/profile/setup" element={<ProfileSetupPage/>}/>
                 <Route path="/user" element={<MainPage/>}>
                     <Route path="bookings" element={<Bookings/>}/>
