@@ -54,15 +54,14 @@ function NavBar(){
     const setShowAuthPage = useSetRecoilState(authAtom);
     const isDesktop850 = useMediaQuery("(min-width: 850px)")
     const isDesktop675 = useMediaQuery("(min-width: 675px)")
-    const navigate = useNavigate();
 
     function authPage(){
         setShowAuthPage((val) => !val)
     }
 
-    const privacy = ()=> {
-      navigate("/schedmate/privacy-policy");
-    }
+    // const privacy = ()=> {
+    //   navigate("/schedmate/privacy-policy");
+    // }
 
     return <div className="relative inset-0 flex z-1 justify-between pt-10 xl:pl-45 xl:pr-45 md:pl-20 md:pr-20 pl-10 pr-10">
         <div className="text-xl font-bold">
@@ -71,7 +70,7 @@ function NavBar(){
         {isDesktop675 ? <div className="flex w-110 justify-between text-[#d9d7e7] text-base">
             <ScrollLink to="seehow" smooth={true} duration={500} className="cursor-pointer">SeeHow</ScrollLink>
             <ScrollLink to="" smooth={true} duration={500} className="cursor-pointer">Features</ScrollLink>
-            <div onClick={privacy} className="cursor-pointer">Privacy</div>
+            <a href="/schedmate/privacy-policy">Privacy-Policy</a>
             <ScrollLink to="contactus" smooth={true} duration={500} className="cursor-pointer">ContactUs</ScrollLink>
         </div> : null}
         { isDesktop850 ?
